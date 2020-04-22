@@ -75,7 +75,7 @@ func (r *RPCClient) CreateMultisig(numRequired int, keys []string) (*CreateMulti
 
 func (r *RPCClient) SignMessageWithPrivkey(privKey string, message string) (string, error) {
 	var res string
-	if err := r.executeRPC("signmessagewithprivkey", res, privKey, message); err != nil {
+	if err := r.executeRPC("signmessagewithprivkey", &res, privKey, message); err != nil {
 		return "", err
 	}
 	return res, nil
@@ -115,6 +115,118 @@ func (r *RPCClient) ReconsiderBlock(blockHash string) error {
 		return err
 	}
 	return nil
+}
+
+func (r *RPCClient) GetBlockchainInfo() (*GetBlockchainInfoResponse, error) {
+	res := new(GetBlockchainInfoResponse)
+	if err := r.executeRPC("verifymessage", res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (r *RPCClient) GetBestBlockHash() (string, error) {
+	var res string
+	if err := r.executeRPC("getbestblockhash", &res); err != nil {
+		return "", err
+	}
+	return res, nil
+}
+
+func (r *RPCClient) GetBlockCount() (int, error) {
+	var res int
+	if err := r.executeRPC("getblockcount", res); err != nil {
+		return 0, err
+	}
+	return res, nil
+}
+
+func (r *RPCClient) GetBlockByHashWithoutTxs(blockHash string) (*BlockWithoutTxsResponse, error) {
+	res := new(BlockWithoutTxsResponse)
+	if err := r.executeRPC("getblock", res, blockHash, true, false); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (r *RPCClient) GetBlockByHashWithTxs(blockHash string) (*BlockWithTxsResponse, error) {
+	res := new(BlockWithTxsResponse)
+	if err := r.executeRPC("getblock", res, blockHash, true, true); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (r *RPCClient) GetBlockHexByHash(blockHash string) (string, error) {
+	var res string
+	if err := r.executeRPC("getblock", &res, blockHash, false, false); err != nil {
+		return "", err
+	}
+	return res, nil
+}
+
+func (r *RPCClient) GetBlockByHeightWithoutTxs(blockHeight int) (*BlockWithoutTxsResponse, error) {
+	res := new(BlockWithoutTxsResponse)
+	if err := r.executeRPC("getblockbyheight", res, blockHeight, true, false); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (r *RPCClient) GetBlockByHeightWithTxs(blockHeight int) (*BlockWithTxsResponse, error) {
+	res := new(BlockWithTxsResponse)
+	if err := r.executeRPC("getblockbyheight", res, blockHeight, true, true); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (r *RPCClient) GetBlockHexByHeight(blockHeight int) (string, error) {
+	var res string
+	if err := r.executeRPC("getblockbyheight", &res, blockHeight, false, false); err != nil {
+		return "", err
+	}
+	return res, nil
+}
+
+func (r *RPCClient) GetBlockHashByHeight(blockHeight int) (string, error) {
+	var res string
+	if err := r.executeRPC("getblockhash", &res, blockHeight); err != nil {
+		return "", err
+	}
+	return res, nil
+}
+
+func (r *RPCClient) GetBlockHeaderByHash(blockHash string) (*BlockHeaderResponse, error) {
+	res := new(BlockHeaderResponse)
+	if err := r.executeRPC("getblockheader", res, blockHash, true); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (r *RPCClient) GetBlockHeaderHexByHash(blockHash string) (string, error) {
+	var res string
+	if err := r.executeRPC("getblockheader", &res, blockHash, false); err != nil {
+		return "", err
+	}
+	return res, nil
+}
+
+func (r *RPCClient) GetChainTips() ([]*ChainTipResponse, error) {
+	res := make([]*ChainTipResponse, 0)
+	if err := r.executeRPC("getchaintips", res); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (r *RPCClient) GetDifficulty() (float64, error) {
+	var res float64
+	if err := r.executeRPC("getdifficulty", &res); err != nil {
+		return 0, err
+	}
+	return res, nil
 }
 
 func (r *RPCClient) executeRPC(method string, res interface{}, args ...interface{}) error {
