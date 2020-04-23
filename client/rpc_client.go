@@ -137,7 +137,7 @@ func (r *RPCClient) GetBestBlockHash() (string, error) {
 
 func (r *RPCClient) GetBlockCount() (int, error) {
 	var res int
-	if err := r.executeRPC("getblockcount", res); err != nil {
+	if err := r.executeRPC("getblockcount", &res); err != nil {
 		return 0, err
 	}
 	return res, nil
