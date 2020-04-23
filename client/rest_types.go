@@ -70,21 +70,21 @@ type MempoolRejectsFilterInfo struct {
 }
 
 type RESTBlock struct {
-	Hash         string            `json:"hash"`
-	Height       int               `json:"height"`
-	Depth        int               `json:"depth"`
-	Version      int               `json:"version"`
-	PrevBlock    string            `json:"prevBlock"`
-	MerkleRoot   string            `json:"merkleRoot"`
-	WitnessRoot  string            `json:"witnessRoot"`
-	TreeRoot     string            `json:"treeRoot"`
-	ReservedRoot string            `json:"reservedRoot"`
-	Time         int               `json:"time"`
-	Bits         int               `json:"bits"`
-	Nonce        int               `json:"nonce"`
-	ExtraNonce   string            `json:"extraNonce"`
-	Mask         string            `json:"mask"`
-	Txs          []RESTTransaction `json:"txs"`
+	Hash         string        `json:"hash"`
+	Height       int           `json:"height"`
+	Depth        int           `json:"depth"`
+	Version      int           `json:"version"`
+	PrevBlock    string        `json:"prevBlock"`
+	MerkleRoot   string        `json:"merkleRoot"`
+	WitnessRoot  string        `json:"witnessRoot"`
+	TreeRoot     string        `json:"treeRoot"`
+	ReservedRoot string        `json:"reservedRoot"`
+	Time         int           `json:"time"`
+	Bits         int           `json:"bits"`
+	Nonce        int           `json:"nonce"`
+	ExtraNonce   string        `json:"extraNonce"`
+	Mask         string        `json:"mask"`
+	Txs          []Transaction `json:"txs"`
 }
 
 type Prevout struct {
@@ -111,7 +111,7 @@ type Output struct {
 	Covenant Covenant `json:"covenant"`
 }
 
-type RESTTransaction struct {
+type Transaction struct {
 	Hash        string   `json:"hash"`
 	WitnessHash string   `json:"witnessHash"`
 	Fee         int      `json:"fee"`

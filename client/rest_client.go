@@ -162,16 +162,16 @@ func (n *RESTClient) GetCoinsByAddress(address string) ([]*Coin, error) {
 	return res, nil
 }
 
-func (n *RESTClient) GetTransactionByHash(hash string) (*RESTTransaction, error) {
-	res := new(RESTTransaction)
+func (n *RESTClient) GetTransactionByHash(hash string) (*Transaction, error) {
+	res := new(Transaction)
 	if err := n.getJSON(fmt.Sprintf("tx/%s", hash), res); err != nil {
 		return nil, err
 	}
 	return res, nil
 }
 
-func (n *RESTClient) GetTransactionsByAddress(address string) ([]*RESTTransaction, error) {
-	var res []*RESTTransaction
+func (n *RESTClient) GetTransactionsByAddress(address string) ([]*Transaction, error) {
+	var res []*Transaction
 	if err := n.getJSON(fmt.Sprintf("tx/address/%s", address), res); err != nil {
 		return nil, err
 	}
