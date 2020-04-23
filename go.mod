@@ -1,4 +1,4 @@
-module handshake
+module github.com/mslipper/handshake
 
 go 1.13
 
