@@ -2,6 +2,7 @@ package primitives
 
 import (
 	"github.com/mslipper/handshake/encoding"
+	"golang.org/x/crypto/blake2b"
 	"io"
 )
 
@@ -13,7 +14,27 @@ type Transaction struct {
 	Witnesses []*Witness
 }
 
+func (t *Transaction) ID() ([]byte, error) {
+	h, _ := blake2b.New256(nil)
+	if err := t.EncodeNoWitnesses(h); err != nil {
+		return nil, err
+	}
+	return h.Sum(nil), nil
+}
+
 func (t *Transaction) Encode(w io.Writer) error {
+	if err := t.EncodeNoWitnesses(w); err != nil {
+		return err
+	}
+	for _, witness := range t.Witnesses {
+		if err := witness.Encode(w); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (t *Transaction) EncodeNoWitnesses(w io.Writer) error {
 	if err := encoding.WriteUint32(w, t.Version); err != nil {
 		return err
 	}
@@ -35,11 +56,6 @@ func (t *Transaction) Encode(w io.Writer) error {
 	}
 	if err := encoding.WriteUint32(w, t.Locktime); err != nil {
 		return err
-	}
-	for _, witness := range t.Witnesses {
-		if err := witness.Encode(w); err != nil {
-			return err
-		}
 	}
 	return nil
 }
