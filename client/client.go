@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"handshake/primitives"
+	"github.com/mslipper/handshake/primitives"
 	"io/ioutil"
 	"net/http"
 )

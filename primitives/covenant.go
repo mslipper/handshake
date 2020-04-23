@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/binary"
 	"errors"
-	"handshake/dns"
-	"handshake/encoding"
+	"github.com/mslipper/handshake/dns"
+	"github.com/mslipper/handshake/encoding"
 	"io"
 )
 

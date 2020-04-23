@@ -3,7 +3,7 @@ package client
 import (
 	"encoding/json"
 	"fmt"
-	"handshake/primitives"
+	"github.com/mslipper/handshake/primitives"
 	"strconv"
 	"sync/atomic"
 )

@@ -1,7 +1,7 @@
 package primitives
 
 import (
-	"handshake/encoding"
+	"github.com/mslipper/handshake/encoding"
 	"io"
 )
 

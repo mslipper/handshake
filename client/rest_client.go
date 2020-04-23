@@ -3,7 +3,7 @@ package client
 import (
 	"errors"
 	"fmt"
-	"handshake/primitives"
+	"github.com/mslipper/handshake/primitives"
 )
 
 type RESTClient struct {

@@ -2,7 +2,7 @@ package dns
 
 import (
 	"errors"
-	"handshake/encoding"
+	"github.com/mslipper/handshake/encoding"
 	"io"
 	"math"
 	"net"
