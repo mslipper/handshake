@@ -50,12 +50,32 @@ func ReadUint8(r io.Reader) (uint8, error) {
 }
 
 func ReadVarint(r io.Reader) (uint64, error) {
-	br, ok := r.(io.ByteReader)
-	if ok {
-		return binary.ReadUvarint(br)
+	sigil, err := ReadByte(r)
+	if err != nil {
+		return 0, nil
 	}
-
-	return binary.ReadUvarint(&byteReader{r: r})
+	if sigil < 0xfd {
+		return uint64(sigil), nil
+	}
+	if sigil == 0xfd {
+		num := make([]byte, 2)
+		if _, err := io.ReadFull(r, num); err != nil {
+			return 0, err
+		}
+		return uint64(binary.LittleEndian.Uint16(num)), nil
+	}
+	if sigil == 0xfe {
+		num := make([]byte, 4)
+		if _, err := io.ReadFull(r, num); err != nil {
+			return 0, err
+		}
+		return uint64(binary.LittleEndian.Uint32(num)), nil
+	}
+	num := make([]byte, 8)
+	if _, err := io.ReadFull(r, num); err != nil {
+		return 0, err
+	}
+	return binary.LittleEndian.Uint64(num), nil
 }
 
 func ReadBytes(r io.Reader, l int) ([]byte, error) {

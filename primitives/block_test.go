@@ -15,6 +15,9 @@ func TestBlock_Golden(t *testing.T) {
 		{
 			"000000000000003d56d278ef00c657de6b1fcb549f9e04e299f6a918c2573b94",
 		},
+		{
+			"0000000000000424ee6c2a5d6e0da5edfc47a4a10328c1792056ee48303c3e40",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(fmt.Sprintf("block %s", tt.hash), func(t *testing.T) {

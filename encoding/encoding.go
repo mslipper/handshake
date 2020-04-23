@@ -3,6 +3,7 @@ package encoding
 import (
 	"encoding/binary"
 	"io"
+	"math"
 )
 
 type Encoder interface {
@@ -43,9 +44,23 @@ func WriteUint8(w io.Writer, val uint8) error {
 }
 
 func WriteVarint(w io.Writer, val uint64) error {
-	buf := make([]byte, binary.MaxVarintLen64)
-	n := binary.PutUvarint(buf, val)
-	_, err := w.Write(buf[:n])
+	var buf []byte
+	if val <= 0xfc {
+		buf = []byte{uint8(val)}
+	} else if val <= math.MaxUint16 {
+		buf = make([]byte, 3)
+		buf[0] = 0xfd
+		binary.LittleEndian.PutUint16(buf[1:], uint16(val))
+	} else if val <= math.MaxUint32 {
+		buf = make([]byte, 5)
+		buf[0] = 0xfe
+		binary.LittleEndian.PutUint32(buf[1:], uint32(val))
+	} else {
+		buf := make([]byte, 9)
+		buf[0] = 0xff
+		binary.LittleEndian.PutUint64(buf[1:], val)
+	}
+	_, err := w.Write(buf)
 	return err
 }
 
