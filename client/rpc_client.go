@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/mslipper/handshake/primitives"
+	"net/http"
 	"strconv"
 	"sync/atomic"
 )
@@ -18,6 +19,7 @@ func NewRPC(host string, opts ...Opt) *RPCClient {
 		Client: &Client{
 			network: primitives.NetworkMainnet,
 			host:    host,
+			c: http.DefaultClient,
 		},
 	}
 	for _, opt := range opts {

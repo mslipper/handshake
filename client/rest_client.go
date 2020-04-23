@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/mslipper/handshake/primitives"
+	"net/http"
 )
 
 type RESTClient struct {
@@ -15,6 +16,7 @@ func NewREST(host string, opts ...Opt) *RESTClient {
 		Client: &Client{
 			network: primitives.NetworkMainnet,
 			host:    host,
+			c:       http.DefaultClient,
 		},
 	}
 	for _, opt := range opts {
