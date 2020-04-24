@@ -2,6 +2,7 @@ package primitives
 
 import (
 	"bytes"
+	"encoding/hex"
 	"fmt"
 	"github.com/stretchr/testify/require"
 	"io/ioutil"
@@ -23,11 +24,13 @@ func TestBlock_Golden(t *testing.T) {
 		t.Run(fmt.Sprintf("block %s", tt.hash), func(t *testing.T) {
 			expData, err := ioutil.ReadFile(fmt.Sprintf("testdata/block_%s.bin", tt.hash))
 			require.NoError(t, err)
-			tx := new(Block)
-			require.NoError(t, tx.Decode(bytes.NewReader(expData)))
+			block := new(Block)
+			require.NoError(t, block.Decode(bytes.NewReader(expData)))
 			actData := new(bytes.Buffer)
-			require.NoError(t, tx.Encode(actData))
+			require.NoError(t, block.Encode(actData))
 			require.EqualValues(t, expData, actData.Bytes())
+			genHash := block.Hash()
+			require.Equal(t, tt.hash, hex.EncodeToString(genHash))
 		})
 	}
 }

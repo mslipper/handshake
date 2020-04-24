@@ -27,8 +27,7 @@ func TestTransaction_Golden(t *testing.T) {
 			require.NoError(t, tx.Encode(actData))
 			require.EqualValues(t, expData, actData.Bytes())
 
-			id, err := tx.ID()
-			require.NoError(t, err)
+			id := tx.ID()
 			require.Equal(t, tt.txid, hex.EncodeToString(id))
 		})
 	}

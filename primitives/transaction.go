@@ -14,12 +14,12 @@ type Transaction struct {
 	Witnesses []*Witness
 }
 
-func (t *Transaction) ID() ([]byte, error) {
+func (t *Transaction) ID() []byte {
 	h, _ := blake2b.New256(nil)
 	if err := t.EncodeNoWitnesses(h); err != nil {
-		return nil, err
+		panic(err)
 	}
-	return h.Sum(nil), nil
+	return h.Sum(nil)
 }
 
 func (t *Transaction) Encode(w io.Writer) error {

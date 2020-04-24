@@ -1,7 +1,10 @@
 package primitives
 
 import (
+	"bytes"
 	"github.com/mslipper/handshake/encoding"
+	"golang.org/x/crypto/blake2b"
+	"golang.org/x/crypto/sha3"
 	"io"
 )
 
@@ -13,7 +16,7 @@ const (
 type Block struct {
 	Nonce        uint32
 	Time         uint64
-	Hash         [32]byte
+	PrevHash     [32]byte
 	TreeRoot     [32]byte
 	ExtraNonce   [NonceSize]byte
 	ReservedRoot [32]byte
@@ -25,6 +28,67 @@ type Block struct {
 	Transactions []*Transaction
 }
 
+func (b *Block) Hash() []byte {
+	leftData := new(bytes.Buffer)
+	if err := encoding.WriteUint32(leftData, b.Nonce); err != nil {
+		panic(err)
+	}
+	if err := encoding.WriteUint64(leftData, b.Time); err != nil {
+		panic(err)
+	}
+	leftData.Write(b.padding(20))
+	leftData.Write(b.PrevHash[:])
+	leftData.Write(b.TreeRoot[:])
+	leftData.Write(b.commitHash())
+	left := leftData.Bytes()
+
+	leftH, _ := blake2b.New512(nil)
+	leftH.Write(left)
+
+	rightH := sha3.New256()
+	rightH.Write(left)
+	rightH.Write(b.padding(8))
+
+	outH, _ := blake2b.New256(nil)
+	outH.Write(leftH.Sum(nil))
+	outH.Write(b.padding(32))
+	outH.Write(rightH.Sum(nil))
+	return outH.Sum(nil)
+}
+
+func (b *Block) commitHash() []byte {
+	h, _ := blake2b.New256(nil)
+	_, _ = h.Write(b.subHash())
+	_, _ = h.Write(b.maskHash())
+	return h.Sum(nil)
+}
+
+func (b *Block) subHash() []byte {
+	h, _ := blake2b.New256(nil)
+	h.Write(b.ExtraNonce[:])
+	h.Write(b.ReservedRoot[:])
+	h.Write(b.WitnessRoot[:])
+	h.Write(b.MerkleRoot[:])
+	_ = encoding.WriteUint32(h, b.Version)
+	_ = encoding.WriteUint32(h, b.Bits)
+	return h.Sum(nil)
+}
+
+func (b *Block) maskHash() []byte {
+	h, _ := blake2b.New256(nil)
+	h.Write(b.PrevHash[:])
+	h.Write(b.Mask[:])
+	return h.Sum(nil)
+}
+
+func (b *Block) padding(size int) []byte {
+	buf := make([]byte, size, size)
+	for i := 0; i < len(buf); i++ {
+		buf[i] = b.PrevHash[i%32] ^ b.TreeRoot[i%32]
+	}
+	return buf
+}
+
 func (b *Block) Encode(w io.Writer) error {
 	if err := encoding.WriteUint32(w, b.Nonce); err != nil {
 		return err
@@ -32,7 +96,7 @@ func (b *Block) Encode(w io.Writer) error {
 	if err := encoding.WriteUint64(w, b.Time); err != nil {
 		return err
 	}
-	if _, err := w.Write(b.Hash[:]); err != nil {
+	if _, err := w.Write(b.PrevHash[:]); err != nil {
 		return err
 	}
 	if _, err := w.Write(b.TreeRoot[:]); err != nil {
@@ -129,7 +193,7 @@ func (b *Block) Decode(r io.Reader) error {
 	}
 	b.Nonce = nonce
 	b.Time = ts
-	b.Hash = hash
+	b.PrevHash = hash
 	b.TreeRoot = treeRoot
 	b.ExtraNonce = extraNonce
 	b.ReservedRoot = reservedRoot
