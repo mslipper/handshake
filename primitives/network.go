@@ -30,6 +30,21 @@ func (n Network) RPCPort() int {
 	}
 }
 
+func (n Network) AddressHRP() string {
+	switch n {
+	case NetworkMainnet:
+		return "hs"
+	case NetworkTestnet:
+		return "ts"
+	case NetworkRegtest:
+		return "rs"
+	case NetworkSimnet:
+		return "ss"
+	default:
+		panic("invalid network")
+	}
+}
+
 func NetworkFromString(n string) (Network, error) {
 	switch Network(n) {
 	case NetworkMainnet:

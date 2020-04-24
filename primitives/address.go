@@ -2,6 +2,7 @@ package primitives
 
 import (
 	"errors"
+	"github.com/btcsuite/btcutil/bech32"
 	"github.com/mslipper/handshake/encoding"
 	"io"
 )
@@ -9,6 +10,14 @@ import (
 type Address struct {
 	Version uint8
 	Hash    []byte
+}
+
+func (a *Address) ToBech32(hrp string) (string, error) {
+	data, err := bech32.ConvertBits(a.Hash, 8, 5, true)
+	if err != nil {
+		return "", err
+	}
+	return bech32.Encode(NetworkMainnet.AddressHRP(), append([]byte{a.Version}, data...))
 }
 
 func (a *Address) Encode(w io.Writer) error {
