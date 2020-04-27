@@ -2,7 +2,7 @@ package client
 
 import "encoding/json"
 
-type InfoResult struct {
+type GetInfoResult struct {
 	Version         string  `json:"version"`
 	Protocolversion int     `json:"protocolversion"`
 	Walletversion   int     `json:"walletversion"`
@@ -21,7 +21,7 @@ type InfoResult struct {
 	Errors          string  `json:"errors"`
 }
 
-type MemoryInfoResult struct {
+type GetMemoryInfoResult struct {
 	Total       int `json:"total"`
 	JsHeap      int `json:"jsHeap"`
 	JsHeapTotal int `json:"jsHeapTotal"`
@@ -38,12 +38,12 @@ type ValidateAddressResult struct {
 	WitnessProgram string `json:"witness_program"`
 }
 
-type CreateMultisigResponse struct {
+type CreateMultisigResult struct {
 	Address      string `json:"address"`
 	RedeemScript string `json:"redeemScript"`
 }
 
-type GetBlockchainInfoResponse struct {
+type GetBlockchainInfoResult struct {
 	Chain                string  `json:"chain"`
 	Blocks               int     `json:"blocks"`
 	Headers              int     `json:"headers"`
@@ -58,7 +58,7 @@ type GetBlockchainInfoResponse struct {
 	Pruneheight          *int `json:"pruneheight"`
 }
 
-type BlockWithoutTxsResponse struct {
+type RPCBlockWithoutTxsResponse struct {
 	Hash              string   `json:"hash"`
 	Confirmations     int      `json:"confirmations"`
 	StrippedSize      int      `json:"strippedsize"`
@@ -83,7 +83,7 @@ type BlockWithoutTxsResponse struct {
 	NextBlockHash     *string  `json:"nextblockhash"`
 }
 
-type BlockWithTxsResponse struct {
+type RPCBlockWithTxsResponse struct {
 	Hash              string  `json:"hash"`
 	Confirmations     int     `json:"confirmations"`
 	StrippedSize      int     `json:"strippedsize"`
@@ -97,7 +97,7 @@ type BlockWithTxsResponse struct {
 	TreeRoot          string  `json:"treeroot"`
 	ReservedRoot      string  `json:"reservedroot"`
 	Mask              string  `json:"mask"`
-	Txs               []Tx    `json:"tx"`
+	Txs               []RPCTx `json:"tx"`
 	Time              int     `json:"time"`
 	Mediantime        int     `json:"mediantime"`
 	Bits              int     `json:"bits"`
@@ -107,27 +107,27 @@ type BlockWithTxsResponse struct {
 	NextBlockHash     *string `json:"nextblockhash"`
 }
 
-type Tx struct {
-	ID            string `json:"txid"`
-	Hash          string `json:"hash"`
-	Size          int    `json:"size"`
-	VSize         int    `json:"vsize"`
-	Version       int    `json:"version"`
-	LockTime      int    `json:"locktime"`
-	Vin           []VIn  `json:"vin"`
-	VOut          []VOut `json:"vout"`
-	BlockHash     string `json:"blockhash"`
-	Confirmations int    `json:"confirmations"`
-	Time          int    `json:"time"`
-	BlockTime     int    `json:"blocktime"`
+type RPCTx struct {
+	ID            string    `json:"txid"`
+	Hash          string    `json:"hash"`
+	Size          int       `json:"size"`
+	VSize         int       `json:"vsize"`
+	Version       int       `json:"version"`
+	LockTime      int       `json:"locktime"`
+	Vin           []RPCVin  `json:"vin"`
+	VOut          []RPCVOut `json:"vout"`
+	BlockHash     string    `json:"blockhash"`
+	Confirmations int       `json:"confirmations"`
+	Time          int       `json:"time"`
+	BlockTime     int       `json:"blocktime"`
 }
 
-type AddressDetails struct {
+type RPCAddress struct {
 	Version int    `json:"version"`
 	Hash    string `json:"hash"`
 }
 
-type VIn struct {
+type RPCVin struct {
 	Coinbase    bool     `json:"coinbase"`
 	Txid        string   `json:"txid"`
 	Vout        int64    `json:"vout"`
@@ -135,14 +135,14 @@ type VIn struct {
 	Sequence    int      `json:"sequence"`
 }
 
-type VOut struct {
-	Value    float64        `json:"value"`
-	N        int            `json:"n"`
-	Address  AddressDetails `json:"address"`
-	Covenant Covenant       `json:"covenant"`
+type RPCVOut struct {
+	Value    float64    `json:"value"`
+	N        int        `json:"n"`
+	Address  RPCAddress `json:"address"`
+	Covenant Covenant   `json:"covenant"`
 }
 
-type BlockHeaderResponse struct {
+type GetBlockHeaderResult struct {
 	Hash              string  `json:"hash"`
 	Confirmations     int     `json:"confirmations"`
 	Height            int     `json:"height"`
@@ -162,7 +162,7 @@ type BlockHeaderResponse struct {
 	NextBlockHash     *string `json:"nextblockhash"`
 }
 
-type ChainTipResponse struct {
+type GetChainTipsResult struct {
 	Height    int    `json:"height"`
 	Hash      string `json:"hash"`
 	Branchlen int    `json:"branchlen"`
