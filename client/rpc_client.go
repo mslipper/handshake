@@ -98,7 +98,7 @@ func (c *Client) RPCReconsiderBlock(blockHash string) error {
 
 func (c *Client) RPCGetBlockchainInfo() (*GetBlockchainInfoResult, error) {
 	res := new(GetBlockchainInfoResult)
-	if err := c.executeRPC("verifymessage", res); err != nil {
+	if err := c.executeRPC("getblockchaininfo", res); err != nil {
 		return nil, err
 	}
 	return res, nil
