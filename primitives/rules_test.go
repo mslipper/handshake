@@ -25,3 +25,65 @@ func TestCreateBlind(t *testing.T) {
 		require.Equal(t, tt.blindHex, hex.EncodeToString(blindB))
 	}
 }
+
+func TestValidateName(t *testing.T) {
+	tests := []struct {
+		name   string
+		input  string
+		errStr string
+	}{
+		{
+			"cannot have zero length",
+			"",
+			"must have nonzero length",
+		},
+		{
+			"cannot be over MaxNameLen characters",
+			"longlonglonglonglonglonglonglonglonglonglonglonglonglonglonglonglong",
+			"over maximum length",
+		},
+		{
+			"cannot start with a hyphen",
+			"-startswithhyphen",
+			"cannot start with a hyphen",
+		},
+		{
+			"cannot end with a hyphen",
+			"endwithhyphen-",
+			"cannot end with a hyphen",
+		},
+		{
+			"cannot contain unicode",
+			"我叫鸣字",
+			"invalid character",
+		},
+		{
+			"can only contain certain characters",
+			"hello!",
+			"invalid character",
+		},
+		{
+			"can only contain certain characters",
+			"hello.",
+			"invalid character",
+		},
+		{
+			"works with valid names",
+			"heres-a-valid-name",
+			"",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if tt.errStr == "" {
+				require.Nil(t, ValidateName(tt.input))
+				return
+			}
+
+			err := ValidateName(tt.input)
+			require.Error(t, err)
+			require.Contains(t, err.Error(), tt.errStr)
+		})
+	}
+}
