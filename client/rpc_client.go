@@ -207,3 +207,11 @@ func (c *Client) RPCGetDifficulty() (float64, error) {
 	}
 	return res, nil
 }
+
+func (c *Client) RPCGetNameByHash(hash string) (*string, error) {
+	var res *string
+	if err := c.executeRPC("getnamebyhash", &res, hash); err != nil {
+		return nil, err
+	}
+	return res, nil
+}
