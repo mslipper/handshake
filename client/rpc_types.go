@@ -44,18 +44,18 @@ type CreateMultisigResult struct {
 }
 
 type GetBlockchainInfoResult struct {
-	Chain                string  `json:"chain"`
-	Blocks               int     `json:"blocks"`
-	Headers              int     `json:"headers"`
-	BestBlockHash        string  `json:"bestblockhash"`
-	TreeRoot             string  `json:"treeroot"`
-	Difficulty           float64 `json:"difficulty"`
-	MedianTime           int     `json:"mediantime"`
-	VerificationProgress float64 `json:"verificationprogress"`
-	ChainWork            string  `json:"chainwork"`
-	Pruned               bool    `json:"pruned"`
-	SoftForks            map[string]json.RawMessage
-	Pruneheight          *int `json:"pruneheight"`
+	Chain                string                     `json:"chain"`
+	Blocks               int                        `json:"blocks"`
+	Headers              int                        `json:"headers"`
+	BestBlockHash        string                     `json:"bestblockhash"`
+	TreeRoot             string                     `json:"treeroot"`
+	Difficulty           float64                    `json:"difficulty"`
+	MedianTime           int                        `json:"mediantime"`
+	VerificationProgress float64                    `json:"verificationprogress"`
+	ChainWork            string                     `json:"chainwork"`
+	Pruned               bool                       `json:"pruned"`
+	SoftForks            map[string]json.RawMessage `json:"softforks"`
+	Pruneheight          *int                       `json:"pruneheight"`
 }
 
 type RPCBlockWithoutTxsResponse struct {
