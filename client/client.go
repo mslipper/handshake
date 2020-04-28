@@ -7,6 +7,7 @@ import (
 	"github.com/mslipper/handshake/primitives"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"sync/atomic"
 )
 
@@ -68,7 +69,7 @@ func WithPort(port int) Opt {
 
 func WithBasePath(path string) Opt {
 	return func(c *Client) {
-		c.basePath = path
+		c.basePath = strings.Trim(path, "/")
 	}
 }
 
