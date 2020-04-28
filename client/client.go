@@ -90,7 +90,6 @@ func (c *Client) getJSON(path string, result interface{}) error {
 	if err != nil {
 		return err
 	}
-	req.Header.Add("accept-encoding", "gzip")
 	if c.apiKey != "" {
 		req.SetBasicAuth("x", c.apiKey)
 	}
@@ -121,7 +120,6 @@ func (c *Client) postJSON(path string, body interface{}, result interface{}) err
 	if err != nil {
 		return err
 	}
-	req.Header.Add("accept-encoding", "gzip")
 	req.Header.Set("Content-Type", "application/json")
 	if c.apiKey != "" {
 		req.SetBasicAuth("x", c.apiKey)
@@ -157,7 +155,6 @@ func (c *Client) executeRPC(method string, resp interface{}, params ...interface
 	if err != nil {
 		return err
 	}
-	req.Header.Add("accept-encoding", "gzip")
 	req.Header.Set("Content-Type", "application/json")
 	if c.apiKey != "" {
 		req.SetBasicAuth("x", c.apiKey)
