@@ -144,13 +144,16 @@ func RegisterFromCovenant(cov *Covenant) (*Register, error) {
 	if len(resourceB) > dns.MaxResourceSize {
 		return nil, errors.New("resource too large")
 	}
-	var resource *dns.Resource
-	if len(resourceB) > 0 {
-		resource = new(dns.Resource)
-		if err := resource.Decode(bytes.NewReader(resourceB)); err != nil {
-			return nil, err
-		}
+	if len(resourceB) == 0 {
+		return nil, errors.New("resource is empty")
 	}
+
+	var resource *dns.Resource
+	resource = new(dns.Resource)
+	if err := resource.Decode(bytes.NewReader(resourceB)); err != nil {
+		return nil, err
+	}
+
 	return &Register{
 		NameHash:         cov.Items[0],
 		Height:           binary.LittleEndian.Uint32(cov.Items[1]),
@@ -188,12 +191,13 @@ func UpdateFromCovenant(cov *Covenant) (*Update, error) {
 	if len(resourceB) > dns.MaxResourceSize {
 		return nil, errors.New("resource too large")
 	}
+	if len(resourceB) == 0 {
+		return nil, errors.New("resource is empty")
+	}
 	var resource *dns.Resource
-	if len(resourceB) > 0 {
-		resource = new(dns.Resource)
-		if err := resource.Decode(bytes.NewReader(resourceB)); err != nil {
-			return nil, err
-		}
+	resource = new(dns.Resource)
+	if err := resource.Decode(bytes.NewReader(resourceB)); err != nil {
+		return nil, err
 	}
 	return &Update{
 		NameHash: cov.Items[0],
